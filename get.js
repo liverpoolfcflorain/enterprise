@@ -1,20 +1,30 @@
+require('dotenv').config();
+
 const express = require('express');
 const { MongoClient, Admin } = require('mongodb');
-const uri = 'mongodb://localhost:27017/';
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-mongoose.connect('mongodb+srv://ismail:5Ha4KKb.FXCDVUU@cluster0.oqpdzm7.mongodb.net/myapp').then(() => {
+// Environment variables
+const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_LOCAL_URI = process.env.MONGODB_LOCAL_URI || 'mongodb://localhost:27017/';
+const PORT = process.env.PORT || 3000;
+const DEFAULT_BUDGET = parseInt(process.env.DEFAULT_BUDGET) || 10000;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+
+mongoose.connect(MONGODB_URI).then(() => {
   console.log('✅ MongoDB connected:', mongoose.connection.name);
 }).catch(err => {
   console.error('❌ MongoDB connection error:', err);
   process.exit(1);
 });
 
-const client = new MongoClient(uri);
+const client = new MongoClient(MONGODB_URI);
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: CORS_ORIGIN
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
@@ -31,7 +41,7 @@ const loginSchema = new mongoose.Schema(
     },  
     budget: {
       type: Number,
-      default: 10000
+      default: DEFAULT_BUDGET
     },
     chosenOption: {
       type: String,
@@ -467,7 +477,7 @@ app.post('/user/:username/reset', async (req, res) => {
             });
         }
 
-        user.budget = 10000;
+        user.budget = DEFAULT_BUDGET;
         user.chosenOption = null;
         user.appliedMultiplier = null;
 
@@ -742,8 +752,9 @@ app.get('/health', (req, res) => {
     });
 });
 
-app.listen(3000, async () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, async () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   await initializeTimer();
 });
 
