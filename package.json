@@ -1,0 +1,33 @@
+{
+  "name": "crisis-management-api",
+  "version": "1.0.0",
+  "description": "Crisis management system with timer functionality",
+  "main": "get.js",
+  "scripts": {
+    "start": "node get.js",
+    "dev": "nodemon get.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crisis",
+    "management",
+    "mongodb",
+    "express",
+    "api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
